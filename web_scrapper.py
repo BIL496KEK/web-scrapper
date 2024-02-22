@@ -62,3 +62,9 @@ for div in soup.find_all("div", class_="rnr-com-like"):
             if number.isdigit():  # Add to the list if it's a numeric value
                 like_count.append(number)
 
+# combine each comment and its like count into a dictionary
+data = [{"comment": comments[j], "likes": like_count[j]} for j in range(len(comments))]
+
+# write to a JSON file
+with open('output_file.json', 'w', encoding='utf-8') as file:
+    json.dump(data, file, ensure_ascii=False, indent=4)
