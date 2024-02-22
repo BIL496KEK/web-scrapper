@@ -40,3 +40,25 @@ while True:
     # break the loop when the height we need to scroll to is larger than the total scroll height
     if (screen_height) * i > scroll_height:
         break
+
+# parse the HTML content
+soup = BeautifulSoup(driver.page_source, "html.parser")
+
+# extract text from <p> tags inside <div> with class 'comment-text'
+comments = []
+for div in soup.find_all("div", class_="comment-text"):
+    for p in div.find_all("p"):
+        comments.append(p.text.strip())
+
+# extract the text from span tags within divs with class='rnr-com-like'
+like_count = []
+for div in soup.find_all("div", class_="rnr-com-like"):
+    span = div.find("span")
+    if span:
+        text = span.text.strip()  # Clean up the text
+        # Extract the number inside parentheses
+        if text.startswith('(') and text.endswith(')'):
+            number = text[1:-1].strip()
+            if number.isdigit():  # Add to the list if it's a numeric value
+                like_count.append(number)
+
