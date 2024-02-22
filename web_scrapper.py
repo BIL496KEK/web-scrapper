@@ -16,3 +16,27 @@ driver = webdriver.Chrome(options=chrome_options)
 # URL to scrape 
 url = "https://www.trendyol.com/pull-bear/siyah-casual-gunluk-spor-ayakkabi-p-355354920/yorumlar?boutiqueId=61&merchantId=112044&filterOverPriceListings=false&sav=true"
 driver.get(url)
+
+# time to load the page depending on the connection speed
+scroll_pause_time = 0.4
+
+# get the screen height of the web
+screen_height = driver.execute_script(
+    "return window.screen.height;")
+
+# get scroll height
+last_height = driver.execute_script("return document.body.scrollHeight")
+
+# scroll till the end of the page
+i = 1
+while True:
+    # scroll one screen height each time
+    driver.execute_script(
+        "window.scrollTo(0, {screen_height}*{i});".format(screen_height=screen_height, i=i))
+    i += 1
+    time.sleep(scroll_pause_time)
+    # update scroll height each time after scrolled, as the scroll height can change after we scrolled the page
+    scroll_height = driver.execute_script("return document.body.scrollHeight;")
+    # break the loop when the height we need to scroll to is larger than the total scroll height
+    if (screen_height) * i > scroll_height:
+        break
